@@ -40,8 +40,6 @@ const sendPost = async (url, data) => {
 const init = () => {
   const signupForm = document.getElementById('signupForm');
   const loginForm = document.getElementById('loginForm');
-  const domoForm = document.getElementById('domoForm');
-  const domoMessage = document.getElementById('domoMessage');
 
   /* If this page has the signupForm, add it's submit event listener.
      Event listener will grab the username, password, and password2

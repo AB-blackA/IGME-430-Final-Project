@@ -8,7 +8,7 @@ const homePage = (req, res) => {
 };
 
 // render a subpage based on subpagename
-const subpagePage = (req, res) => {
+const subPagePage = (req, res) => {
     const subPageName = `${req.params.subPageName}`;
 
     res.render('subPage', { subPageName });
@@ -26,24 +26,46 @@ const postsPage = (req, res) => {
 // right now our res is just sending a message to indicate the endpoint is being
 // reached. still needs error codes, json data, etc.
 
+// i believe also before the return statement some data needs to be added
+// in one of the schemas. see Account.js 'signup' for reference
+
 // create a new subpage
 const newSubPage = (req, res) => {
-    const newSubPageName = `${req.body.subPageName}`;
-    return res.json({ redirect: `${newSubPageName}` });
+    const subPageName = `${req.body.subPageName}`;
+
+    if (!subPageName) {
+        return res.status(400).json({ error: 'SubPage Name cannot be Empty' });
+    }
+
+    return Thread.authenticate(subPageName, (err, account) => {
+        if (err) {
+            return res.status(401).json({ error: 'Error occured while creating subpage' });
+        }
+
+        if (!account) {
+            return res.status(401).json({ error: 'You must be logged in to create a subpage' });
+        }
+
+
+
+
+    });
+
+    return res.json({ redirect: `${subPageName}` });
 };
 
 // create a new thread
 const newThread = (req, res) => {
     const threadTitle = `${req.body.threadTitle}`;
-    const subpageName = `${req.params.subPageName}`;
+    const subpageName = `${req.body.subPageName}`;
 
     return res.json({ redirect: `${subpageName, threadTitle}` });
 };
 
 // post to a thread
 const postToThread = (req, res) => {
-    const subpageName = `${req.params.subpageName}`;
-    const threadTitle = `${req.params.threadTitle}`;
+    const subpageName = `${req.body.subpageName}`;
+    const threadTitle = `${req.body.threadTitle}`;
     const postContent = `${req.body.postContent}`;
 
     return res.json({ redirect: `${subpageName, threadTitle, postContent}` });
@@ -52,7 +74,7 @@ const postToThread = (req, res) => {
 module.exports = {
     homePage,
     newSubPage,
-    subpagePage,
+    subPagePage,
     newThread,
     postsPage,
     postToThread,
