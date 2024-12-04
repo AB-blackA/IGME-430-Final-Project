@@ -1,6 +1,5 @@
-const models = require('../models');
+const { ThreadModel, HomeModel, SubPageModel } = require('../models');
 
-const { Thread } = models;
 
 // render the home page
 const homePage = (req, res) => {
@@ -30,28 +29,31 @@ const postsPage = (req, res) => {
 // in one of the schemas. see Account.js 'signup' for reference
 
 // create a new subpage
-const newSubPage = (req, res) => {
+const newSubPage = async (req, res) => {
     const subPageName = `${req.body.subPageName}`;
+    const account = `${req.body.account}`;
 
     if (!subPageName) {
         return res.status(400).json({ error: 'SubPage Name cannot be Empty' });
+    } 
+    if (!account) {
+        return res.status(401).json({ error: 'You must be logged in to create a subpage' });
     }
 
-    return Thread.authenticate(subPageName, (err, account) => {
-        if (err) {
-            return res.status(401).json({ error: 'Error occured while creating subpage' });
+    try {
+        const emptyArray = [];
+        const subPage = new SubPageModel({ subPageName, emptyArray });
+        await subPage.save();
+
+        return res.json({ redirect: `subPage/${subPageName}` });
+    } catch (err) {
+        console.log(err);
+        if (err.code === 11000) {
+            return res.status(400).json({ error: 'SubPage already exists!' });
         }
+        return res.status(500).json({ error: 'An error occured while creating page' });
+    }
 
-        if (!account) {
-            return res.status(401).json({ error: 'You must be logged in to create a subpage' });
-        }
-
-
-
-
-    });
-
-    return res.json({ redirect: `${subPageName}` });
 };
 
 // create a new thread
