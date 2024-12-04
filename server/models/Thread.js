@@ -3,7 +3,7 @@ const _ = require('underscore');
 
 // entry is the post
 // user displays the user and avatar
-const EntrySchema = new mongoose.Schema({
+const PostSchema = new mongoose.Schema({
     entry: String,
     user: String,
 });
@@ -14,7 +14,7 @@ const ThreadSchema = new mongoose.Schema({
         required: true,
         trime: true,
     },
-    entries: [EntrySchema],
+    entries: [PostSchema],
     createdDate: {
         type: Date,
         default: Date.now,
@@ -26,5 +26,5 @@ ThreadSchema.statics.toAPI = (doc) => ({
     entries: doc.entries,
 });
 
-const ThreadModel = mongoose.model('Thread', ThreadSchema);
+ThreadModel = mongoose.model('Thread', ThreadSchema);
 module.exports = ThreadModel;
