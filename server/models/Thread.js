@@ -50,6 +50,7 @@ const HomeSchema = new mongoose.Schema({
     entries: [SubPageSchema],
 });
 
+
 HomeSchema.statics.toAPI = (doc) => ({
     entries: doc.entries,
 });
@@ -64,9 +65,35 @@ ThreadSchema.statics.toAPI = (doc) => ({
     entries: doc.entries,
 });
 
-const HomeModel = mongoose.model('Home', HomeSchema);
+
 const SubPageModel = mongoose.model('SubPage', SubPageSchema);
 const ThreadModel = mongoose.model('Thread', ThreadSchema);
+
+let HomeModel;
+// create home model only if one doesn't exist yet
+// we only want one
+if (mongoose.models.Home) {
+    HomeModel = mongoose.models.Home;
+} else {
+    HomeModel = mongoose.model('Home', HomeSchema);
+}
+
+const createHome = async () => {
+
+    //check if exists
+    const home = await HomeModel.findOne();
+
+    if (!home) {
+
+        const subPage = await SubPageModel.create({ name: 'DOTA2', entries: [] });
+        // make a subpage for our new model. DOTA2 is by default.
+        await HomeModel.create({ entries: [subPage] });
+        console.log(await HomeModel.findOne());
+    }
+}
+
+createHome();
+
 module.exports = {
     ThreadModel,
     HomeModel,

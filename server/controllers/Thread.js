@@ -3,14 +3,15 @@ const { ThreadModel, HomeModel, SubPageModel } = require('../models');
 
 // render the home page
 const homePage = (req, res) => {
-    res.render('home');
+    return res.render('main');
 };
 
 // render a subpage based on subpagename
 const subPagePage = (req, res) => {
     const subPageName = `${req.params.subPageName}`;
 
-    res.render('subPage', { subPageName });
+
+    return res.render(`subPage/${subPageName}`);
 };
 
 // render a thread (posts) based on subpagepage
@@ -18,8 +19,28 @@ const postsPage = (req, res) => {
     const subPageName = `${req.params.subpageName}`;
     const threadName = `${req.params.threadName}`;
 
-    res.render('thread', { subPageName, threadName });
+    return res.render(`subPage/${subPageName}/${threadName}`);
 };
+
+const getSubPageList = async (req, res) => {
+    try {
+
+        // find homemodel. should be only one...
+        const home = await HomeModel.findOne();
+
+        if (!home) {
+            return [];
+        }
+
+        // find all the subpages, grab their names, map them, return them
+        const subPageNames = home.entries.map(subPage => subPage.name);
+
+        return subPageNames;
+    } catch (err) {
+        console.error('Error fetching subpages', err);
+        return [];
+    }
+}
 
 // the following are dummy functions intented to be filled in later
 // right now our res is just sending a message to indicate the endpoint is being
@@ -35,7 +56,7 @@ const newSubPage = async (req, res) => {
 
     if (!subPageName) {
         return res.status(400).json({ error: 'SubPage Name cannot be Empty' });
-    } 
+    }
     if (!account) {
         return res.status(401).json({ error: 'You must be logged in to create a subpage' });
     }
@@ -45,7 +66,7 @@ const newSubPage = async (req, res) => {
         const subPage = new SubPageModel({ subPageName, emptyArray });
         await subPage.save();
 
-        return res.json({ redirect: `subPage/${subPageName}` });
+        return res.json({ redirect: `/subPage/${subPageName}` });
     } catch (err) {
         console.log(err);
         if (err.code === 11000) {
@@ -80,4 +101,5 @@ module.exports = {
     newThread,
     postsPage,
     postToThread,
+    getSubPageList
 };

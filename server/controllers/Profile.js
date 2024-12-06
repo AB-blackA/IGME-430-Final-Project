@@ -27,7 +27,7 @@ const editAvatar = (req, res) => {
     // one page
 }
 
-modoule.exports = {
+module.exports = {
     profilePage,
     editBio,
     editAvatar

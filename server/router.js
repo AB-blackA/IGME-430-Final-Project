@@ -18,6 +18,10 @@ const router = (app) => {
   app.get('/main', mid.requiresSecure, controllers.Thread.homePage);
   app.post('/main', mid.requiresSecure, mid.requiresLogin, controllers.Thread.newSubPage);
 
+  // endpoint for getting list of subpages. Note that this is not the pages themeselves, but just
+  // the list of them (if you wanted say their names to load in on the main page...)
+  app.get('/getSubPageList', mid.requiresSecure, controllers.Thread.getSubPageList);
+
   // subpages is different from the main page in that a Subpage is specific to an area. For example,
   // 'Minecraft' might be a subpage and contain threads related to Minecraft. You would want to 
   // GET the subpage (like `/subpage/Minecraft`), and possibly POST a new thread to the subpage 
@@ -34,9 +38,9 @@ const router = (app) => {
   // profile is the profile page for any given user. GET allows you to see their profile page, which 
   // would likely contain a BIO and Avatar. POST is a way to update your profile page for a new bio
   app.get('/profile', mid.requiresSecure, controllers.Profile.profilePage);
-  app.post('/profile', mid.requiresSecure, mid.requiresLogin, controllers.Profile.updateBio);
+  //app.post('/profile', mid.requiresSecure, mid.requiresLogin, controllers.Profile.updateBio);
 
-  app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Account.loginPage);
+  app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Thread.homePage);
 };
 
 module.exports = router;
