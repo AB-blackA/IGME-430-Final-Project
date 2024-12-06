@@ -11,7 +11,7 @@ const subPagePage = (req, res) => {
     const subPageName = `${req.params.subPageName}`;
 
 
-    return res.render(`subPage/${subPageName}`);
+    return res.render(`subPage`, { subPageName });
 };
 
 // render a thread (posts) based on subpagepage

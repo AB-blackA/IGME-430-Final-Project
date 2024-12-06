@@ -1,16 +1,15 @@
 // this is an Austin file pulled from Domo
 
 const requiresLogin = (req, res, next) => {
-  console.log('logging out');
   if (!req.session.account) {
     return res.redirect('/');
   }
   return next();
 };
 
-const requiresLogout = (redirectTarget = '/main') => (req, res, next) => {
+const requiresLogout = (req, res, next) => {
   if (req.session.account) {
-    return res.redirect(redirectTarget);
+    return res.redirect('/main');
   }
 
   return next();

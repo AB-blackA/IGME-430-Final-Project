@@ -85,11 +85,16 @@ const createHome = async () => {
 
     if (!home) {
 
-        const subPage = await SubPageModel.create({ name: 'DOTA2', entries: [] });
+        const subPage1 = await SubPageModel.create({ name: 'DOTA2', entries: [] });
+        const subPage2 = await SubPageModel.create({ name: 'StarCraft II', entries: [] });
+        const subPage3 = await SubPageModel.create({ name: 'Team Fortress 2', entries: [] });
+        const subPage4 = await SubPageModel.create({ name: 'Diablo II', entries: [] });
         // make a subpage for our new model. DOTA2 is by default.
-        await HomeModel.create({ entries: [subPage] });
-        console.log(await HomeModel.findOne());
+        await HomeModel.create({ entries: [subPage1, subPage2, subPage3, subPage4] });
     }
+
+
+    console.log(await HomeModel.findOne());
 }
 
 createHome();
