@@ -2,6 +2,8 @@ const models = require('../models');
 
 const { Account } = models;
 
+console.log(`Accounts: ${Account}`);
+
 const loginPage = (req, res) => res.render('login');
 
 const signupPage = (req, res) => res.render('signup');

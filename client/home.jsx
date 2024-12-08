@@ -1,6 +1,8 @@
 const helper = require('./helper.js');
 const React = require('react');
 const { createRoot } = require('react-dom/client');
+const { useState, useEffect } = React;
+
 
 const SubPageList = (props) => {
     const [subPageList, setPages] = useState(props.subpages);
@@ -12,7 +14,7 @@ const SubPageList = (props) => {
             setPages(data.subpages);
         };
         getSubPagesFromServer();
-    }, [props.reloadSubPages]);
+    }, [props.reloadSubPageList]);
 
     if (subPageList.length === 0) {
         return (
@@ -24,9 +26,9 @@ const SubPageList = (props) => {
 
     const subPageNodes = subPageList.map(subPage => {
         return (
-            <div key={domo.id} className='domo'>
+            <div key={subPage.name} className='subs'>
                 <img src='/assets/img/face.png' alt='thread pic' className='threadPic' />
-                <h3 className='threadName'>Name: {subPageList.name}</h3>
+                <h3 className='threadName'>Name: {subPage.name}</h3>
             </div>
         );
     });
@@ -46,14 +48,16 @@ const App = () => {
     return (
         <div>
             <div id='subs'>
-                <SubPageList subs={[]} reloadSubPageList={reloadSubPageList} triggerReload={() => setReloadSubPageList(!reloadSubPageList)} />
+                <SubPageList subpages={[]} reloadSubPageList={reloadSubPageList} triggerReload={() => setReloadSubPageList(!reloadSubPageList)} />
             </div>
-            <div id='makeSub'>
-                <SubPageForm triggerReload={() => setReloadDomos(!reloadDomos)} />
-            </div>
+
         </div>
     );
 }
+// this goes right below the div for SubPageList
+/* <div id='makeSub'>
+               <SubPageForm triggerReload={() => setReloadSubPageList(!reloadSubPageList)} />
+            </div> */
 
 const init = () => {
     const root = createRoot(document.getElementById('app'));

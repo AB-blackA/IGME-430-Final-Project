@@ -66,38 +66,34 @@ ThreadSchema.statics.toAPI = (doc) => ({
 });
 
 
-const SubPageModel = mongoose.model('SubPage', SubPageSchema);
-const ThreadModel = mongoose.model('Thread', ThreadSchema);
+SubPageModel = mongoose.model('SubPage', SubPageSchema);
+ThreadModel = mongoose.model('Thread', ThreadSchema);
 
-let HomeModel;
-// create home model only if one doesn't exist yet
-// we only want one
-if (mongoose.models.Home) {
-    HomeModel = mongoose.models.Home;
-} else {
-    HomeModel = mongoose.model('Home', HomeSchema);
-}
+HomeModel = mongoose.models.Home || mongoose.model('Home', HomeSchema);
 
 const createHome = async () => {
+    try {
+        const home = await HomeModel.findOne();
 
-    //check if exists
-    const home = await HomeModel.findOne();
+        if (!home) {
+            const subPage1 = await SubPageModel.create({ name: 'DOTA2', entries: [] });
+            const subPage2 = await SubPageModel.create({ name: 'StarCraft II', entries: [] });
+            const subPage3 = await SubPageModel.create({ name: 'Team Fortress 2', entries: [] });
+            const subPage4 = await SubPageModel.create({ name: 'Diablo II', entries: [] });
+            const subPage5 = await SubPageModel.create({ name: 'Overwatch II', entries: [] });
 
-    if (!home) {
+            await HomeModel.create({ entries: [subPage1, subPage2, subPage3, subPage4, subPage5] });
+        }
 
-        const subPage1 = await SubPageModel.create({ name: 'DOTA2', entries: [] });
-        const subPage2 = await SubPageModel.create({ name: 'StarCraft II', entries: [] });
-        const subPage3 = await SubPageModel.create({ name: 'Team Fortress 2', entries: [] });
-        const subPage4 = await SubPageModel.create({ name: 'Diablo II', entries: [] });
-        // make a subpage for our new model. DOTA2 is by default.
-        await HomeModel.create({ entries: [subPage1, subPage2, subPage3, subPage4] });
+        console.log(await HomeModel.findOne());
+    } catch (error) {
+        console.error('Error in createHome:', error);
     }
-
-
-    console.log(await HomeModel.findOne());
-}
+};
 
 createHome();
+
+console.log('Mongoose models:', mongoose.models);
 
 module.exports = {
     ThreadModel,

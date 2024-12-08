@@ -1,5 +1,9 @@
-const { ThreadModel, HomeModel, SubPageModel } = require('../models');
+const models = require('../models');
 
+const { ThreadModel, HomeModel, SubPageModel } = models;
+
+console.log(`SubPageModel : ${SubPageModel}`);
+console.log(`HomeModel : ${HomeModel}`);
 
 // render the home page
 const homePage = (req, res) => {
@@ -23,10 +27,16 @@ const postsPage = (req, res) => {
 };
 
 const getSubPageList = async (req, res) => {
+
+    console.log('subpagelistfunction');
+
     try {
 
+        console.log('before findone');
         // find homemodel. should be only one...
         const home = await HomeModel.findOne();
+
+        console.log(home);
 
         if (!home) {
             return [];
