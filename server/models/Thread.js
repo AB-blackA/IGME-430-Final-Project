@@ -65,6 +65,9 @@ ThreadSchema.statics.toAPI = (doc) => ({
     entries: doc.entries,
 });
 
+let SubPageModel = {};
+let ThreadModel = {};
+let HomeModel = {};
 
 SubPageModel = mongoose.model('SubPage', SubPageSchema);
 ThreadModel = mongoose.model('Thread', ThreadSchema);
