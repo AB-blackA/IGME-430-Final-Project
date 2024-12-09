@@ -2,9 +2,6 @@ const models = require('../models');
 
 const { ThreadModel, HomeModel, SubPageModel } = models.Thread;
 
-console.log(`SubPageModel : ${SubPageModel}`);
-console.log(`HomeModel : ${HomeModel}`);
-
 // render the home page
 const homePage = (req, res) => {
     return res.render('main');
@@ -26,31 +23,52 @@ const postsPage = (req, res) => {
     return res.render(`subPage/${subPageName}/${threadName}`);
 };
 
-const getSubPageList = async (req, res) => {
+const subPageData = async (req, res) => {
+    try {
+       
+        const { name } = req.query; 
 
-    console.log('subpagelistfunction');
+        if (name) {
+            // find the correct SubPageModel by name.
+            const subPage = await SubPageModel.findOne({ name });
+
+            if (!subPage) {
+                return res.json({ threads: [] }); 
+            }
+
+            return res.json({ threads: subPage.entries });
+        }
+
+
+    } catch (err) {
+        console.error('Error fetching threads', err);
+        return res.json({ threads: [] });
+    }
+};
+
+
+const getSubPageList = async (req, res) => {
 
     try {
 
-        console.log('before findone');
         // find homemodel. should be only one...
         const home = await HomeModel.findOne();
 
         console.log(home);
 
         if (!home) {
-            return [];
+            return res.json({ home: [] });
         }
 
         // find all the subpages, grab their names, map them, return them
         const subPageNames = home.entries.map(subPage => subPage.name);
 
-        console.log(subPageNames);
+        return res.json({ subPageNames: subPageNames })
 
-        return subPageNames;
     } catch (err) {
         console.error('Error fetching subpages', err);
-        return [];
+
+        return res.json({ home: [] });
     }
 }
 
@@ -113,5 +131,6 @@ module.exports = {
     newThread,
     postsPage,
     postToThread,
-    getSubPageList
+    getSubPageList,
+    subPageData
 };

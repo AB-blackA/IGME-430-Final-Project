@@ -4,6 +4,7 @@ module.exports = {
     entry: {
         login: './client/login.jsx',
         home: './client/home.jsx',
+        subpage: '/client/subpage.jsx',
     },
     module: {
         rules: [

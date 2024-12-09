@@ -10,10 +10,9 @@ const SubPageList = (props) => {
     useEffect(() => {
         const getSubPagesFromServer = async () => {
             const response = await fetch('/getSubPageList');
-            console.log(`response: ${response}`);
             const data = await response.json();
-            setPages(data.subpages);
-        };
+            setPages(data.subPageNames); 
+        };        
         getSubPagesFromServer();
     }, [props.reloadSubPageList]);
 
@@ -28,10 +27,12 @@ const SubPageList = (props) => {
     }
 
     const subPageNodes = subPageList.map(subPage => {
+
+        const url = `/subPage/${subPage}`;
+
         return (
-            <div key={subPage.name} className='subs'>
-                <img src='/assets/img/face.png' alt='thread pic' className='threadPic' />
-                <h3 className='threadName'>Name: {subPage.name}</h3>
+            <div key={subPage} className='subs'>
+                <a href={url} className='threadName'>{subPage}</a>
             </div>
         );
     });
@@ -43,8 +44,6 @@ const SubPageList = (props) => {
     );
 };
 
-// App was slightly modified to add the triggerReload to DomoList so it would
-// update on deletion
 const App = () => {
     const [reloadSubPageList, setReloadSubPageList] = useState(false);
 
@@ -58,6 +57,7 @@ const App = () => {
     );
 }
 // this goes right below the div for SubPageList
+// this is for the form that a user could use to add a sub to the forum
 /* <div id='makeSub'>
                <SubPageForm triggerReload={() => setReloadSubPageList(!reloadSubPageList)} />
             </div> */

@@ -29,6 +29,9 @@ const router = (app) => {
   app.get('/subPage/:subpageName', mid.requiresSecure, controllers.Thread.subPagePage);
   app.post('/subPage/:subpageName', mid.requiresSecure, mid.requiresLogin, controllers.Thread.newThread);
 
+  // get data about subpage
+  app.get('/subPageData', mid.requiresSecure, controllers.Thread.subPageData);
+
   // posts is what loads in the specific thread. For example, in a Minecraft subthread, you might
   // want to GET the posts from a thread titled 'Best Way to Mine Diamonds?' as well as POST
   // a 'post' (reply, comment, etc.) to that thread.
