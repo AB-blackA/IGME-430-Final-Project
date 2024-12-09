@@ -10,11 +10,14 @@ const SubPageList = (props) => {
     useEffect(() => {
         const getSubPagesFromServer = async () => {
             const response = await fetch('/getSubPageList');
+            console.log(`response: ${response}`);
             const data = await response.json();
             setPages(data.subpages);
         };
         getSubPagesFromServer();
     }, [props.reloadSubPageList]);
+
+    console.log(`subPageList: ${subPageList}`);
 
     if (subPageList.length === 0) {
         return (

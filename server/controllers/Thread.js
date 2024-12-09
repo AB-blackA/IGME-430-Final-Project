@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const { ThreadModel, HomeModel, SubPageModel } = models;
+const { ThreadModel, HomeModel, SubPageModel } = models.Thread;
 
 console.log(`SubPageModel : ${SubPageModel}`);
 console.log(`HomeModel : ${HomeModel}`);
@@ -44,6 +44,8 @@ const getSubPageList = async (req, res) => {
 
         // find all the subpages, grab their names, map them, return them
         const subPageNames = home.entries.map(subPage => subPage.name);
+
+        console.log(subPageNames);
 
         return subPageNames;
     } catch (err) {
