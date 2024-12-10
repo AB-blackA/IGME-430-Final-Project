@@ -7,24 +7,16 @@ const threadName = urlParts[urlParts.length - 1];
 const subPageName = urlParts[urlParts.length - 2];
 
 const PostList = (props) => {
-    console.log("PostList props:", props);
     const [postList, setPosts] = useState(props.posts);
 
     useEffect(() => {
         const getPostsFromServer = async () => {
             const response = await fetch(`/threadData?threadName=${threadName}&subPageName=${subPageName}`);
             const data = await response.json();
-
-            console.log('next print is for the data');
-            console.log(data);
-            console.log('this is after the data print');
-
-            setPosts(data.posts);
+            setPosts(data.thread.entries);
         };
         getPostsFromServer();
-    }, [threadName.reloadPostList]);
-
-    console.log('postList' + postList);
+    }, [props.reloadPostList]);
 
     if (postList.length === 0) {
         return (
@@ -46,15 +38,16 @@ const PostList = (props) => {
     );
 };
 
-const createPost = async (event, threadName, reloadPostList, setReloadPostList) => {
+const createPost = async (event, threadName, reloadPostList, setReloadPostList, setStatusMessage) => {
     event.preventDefault();
     const form = event.target;
     const postContent = form.postContent.value.trim();
 
     if (!postContent) {
-        alert('Post content is required!');
+        setStatusMessage('Post content is required!');
         return;
     }
+    
 
     const response = await fetch('/newPost', {
         method: 'POST',
@@ -68,15 +61,16 @@ const createPost = async (event, threadName, reloadPostList, setReloadPostList) 
     });
 
     if (response.ok) {
-        alert('Post created successfully!');
+        setStatusMessage('Post created successfully!');
         setReloadPostList(!reloadPostList);
     } else {
-        alert('Error creating post.');
+        setStatusMessage('Error creating post.');
     }
 };
 
 const ThreadPage = () => {
     const [reloadPostList, setReloadPostList] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
 
     return (
         <div>
@@ -84,12 +78,13 @@ const ThreadPage = () => {
                 <PostList posts={[]} reloadPostList={reloadPostList} triggerReload={() => setReloadPostList(!reloadPostList)} />
             </div>
             <div id='create-post'>
-                <form onSubmit={(e) => createPost(e, threadName, reloadPostList, setReloadPostList)}>
+                <form onSubmit={(e) => createPost(e, threadName, reloadPostList, setReloadPostList, setStatusMessage)}>
                     <label htmlFor='postContent'>Post Content:</label>
                     <textarea id='postContent' name='postContent' placeholder='Enter post content' required />
                     <button type='submit'>Create Post</button>
                 </form>
             </div>
+            {statusMessage && <div className="statusMessage">{statusMessage}</div>}
         </div>
     );
 };

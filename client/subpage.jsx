@@ -4,7 +4,7 @@ const { createRoot } = require('react-dom/client');
 const { useState, useEffect } = React;
 
 const urlParts = window.location.pathname.split('/');
-const subpageName = urlParts[urlParts.length - 1];
+const subpageName = decodeURIComponent(urlParts[urlParts.length - 1]);
 
 const ThreadList = (props) => {
     const [threadList, setThreads] = useState(props.threads);
@@ -16,7 +16,7 @@ const ThreadList = (props) => {
             setThreads(data.threads);
         };
         getThreadsFromServer();
-    }, [subpageName.reloadSubPageList]);
+    }, [subpageName, props.reloadThreadList]); // Updated dependency to include reloadThreadList
 
     if (threadList.length === 0) {
         return (
@@ -26,12 +26,8 @@ const ThreadList = (props) => {
         );
     }
 
-
     const threadNodes = threadList.map((thread) => {
         const threadUrl = `/subPage/${subpageName}/${thread.name}`;
-
-        console.log(`subpagename: ${subpageName}`);
-
         return (
             <div key={thread.name} className='threads'>
                 <h3 className='threadName'>
@@ -39,7 +35,6 @@ const ThreadList = (props) => {
                 </h3>
             </div>
         );
-
     });
 
     return (
@@ -47,13 +42,13 @@ const ThreadList = (props) => {
     );
 };
 
-const createThread = async (event, subpageName, reloadThreadList, setReloadThreadList) => {
+const createThread = async (event, subpageName, reloadThreadList, setReloadThreadList, setStatusMessage) => {
     event.preventDefault();
     const form = event.target;
     const threadName = form.threadName.value.trim();
 
     if (!threadName) {
-        alert('Thread name is required!');
+        setStatusMessage('Thread name is required!');
         return;
     }
 
@@ -69,28 +64,33 @@ const createThread = async (event, subpageName, reloadThreadList, setReloadThrea
     });
 
     if (response.ok) {
-        alert('Thread created successfully!');
+        setStatusMessage('Thread created successfully!');
         setReloadThreadList(!reloadThreadList);
     } else {
-        alert('Error creating thread.');
+        setStatusMessage('Error creating thread.');
     }
 };
 
 const App = () => {
     const [reloadThreadList, setReloadThreadList] = useState(false);
+    const [statusMessage, setStatusMessage] = useState('');
 
     return (
         <div>
             <div id='threads'>
-                <ThreadList threads={[]} reloadThreadList={reloadThreadList} triggerReload={() => setReloadThreadList(!reloadThreadList)} />
+                <ThreadList 
+                    threads={[]} 
+                    reloadThreadList={reloadThreadList} 
+                />
             </div>
             <div id='create-thread'>
-                <form onSubmit={(e) => createThread(e, subpageName, reloadThreadList, setReloadThreadList)}>
+                <form onSubmit={(e) => createThread(e, subpageName, reloadThreadList, setReloadThreadList, setStatusMessage)}>
                     <label htmlFor='threadName'>Thread Name:</label>
                     <input type='text' id='threadName' name='threadName' placeholder='Enter thread name' required />
                     <button type='submit'>Create Thread</button>
                 </form>
             </div>
+            {statusMessage && <div className="statusMessage">{statusMessage}</div>}
         </div>
     );
 };

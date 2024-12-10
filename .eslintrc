@@ -4,5 +4,10 @@
     "no-underscore-dangle": "off",
     "no-plusplus": "off",
     "import/extensions": "off"
+  },
+  "globals": {
+    "document": true,
+    "foo": true,
+    "window": true
   }
 }

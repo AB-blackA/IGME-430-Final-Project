@@ -2,12 +2,12 @@ const models = require('../models');
 
 const { Account } = models;
 
-
 const loginPage = (req, res) => res.render('login');
 
 const signupPage = (req, res) => res.render('signup');
 
 const logout = (req, res) => {
+  req.session.isLoggedIn = false;
   req.session.destroy();
   res.redirect('/');
 };
@@ -26,6 +26,7 @@ const login = (req, res) => {
     }
 
     req.session.account = Account.toAPI(account);
+    req.session.isLoggedIn = true;
 
     return res.redirect('main');
   });

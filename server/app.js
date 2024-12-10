@@ -52,6 +52,14 @@ redisClient.connect().then(() => {
   app.set('view engine', 'handlebars');
   app.set('views', `${__dirname}/../views`);
 
+  // Middleware to add `isLoggedIn` to all routes
+  app.use((req, res, next) => {
+    // Check if the user is logged in via session
+    res.locals.isLoggedIn = req.session.isLoggedIn || false;
+    next();
+  });
+
+  // Define your routes here
   router(app);
 
   app.listen(port, (err) => {

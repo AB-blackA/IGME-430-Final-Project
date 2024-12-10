@@ -11,8 +11,11 @@
 <body>
   <nav>
     <a href="/"><img id="logo" src="/assets/img/logo.png" alt="forum logo" /></a>
-    <div class="navlink"><a href="login"></a></div>
-    <div class="navlink"><a href="/logout">Log out</a></div>
+    {{#if isLoggedIn}}
+    <div class="navlink"><a href="/logout">Log Out</a></div>
+    {{else}}
+    <div class="navlink"><a href="/login">Log In</a></div>
+    {{/if}}
   </nav>
 
   <section id="app">

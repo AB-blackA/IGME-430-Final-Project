@@ -9,18 +9,20 @@
 
 <body>
 
-    
 
-    <nav><a href="/main"><img id="logo" src="/assets/img/logo.png" alt="logo (thread and needle)" /></a>
-        <p>Threads</p>
-        <div class="navlink"><a href="login">Log In</a></div>
-        <div class="navlink"><a href="/logout">Log out</a></div>
+
+    <nav> <a href="/"><img id="logo" src="/assets/img/logo.png" alt="forum logo" /></a>
+        {{#if isLoggedIn}}
+        <div class="navlink"><a href="/logout">Log Out</a></div>
+        {{else}}
+        <div class="navlink"><a href="/login">Log In</a></div>
+        {{/if}}
     </nav>
 
-    <div class="ad-space">
-        <img src="/assets/img/adSpace.png" alt="Left Ad" class="ad-image left" />
-        <img src="/assets/img/adSpace.png" alt="Right Ad" class="ad-image right" />
+    <img src="/assets/img/adSpace.png" alt="Left Ad" class="ad-image left" />
+    <img src="/assets/img/adSpace.png" alt="Right Ad" class="ad-image right" />
     </div>
+
 
     <section id="app">
 
