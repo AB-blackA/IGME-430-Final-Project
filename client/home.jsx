@@ -11,12 +11,10 @@ const SubPageList = (props) => {
         const getSubPagesFromServer = async () => {
             const response = await fetch('/getSubPageList');
             const data = await response.json();
-            setPages(data.subPageNames); 
-        };        
+            setPages(data.subPageNames);
+        };
         getSubPagesFromServer();
     }, [props.reloadSubPageList]);
-
-    console.log(`subPageList: ${subPageList}`);
 
     if (subPageList.length === 0) {
         return (
@@ -32,7 +30,7 @@ const SubPageList = (props) => {
 
         return (
             <div key={subPage} className='subs'>
-                <a href={url} className='threadName'>{subPage}</a>
+                <a href={url} className='subpageName'>{subPage}</a>
             </div>
         );
     });

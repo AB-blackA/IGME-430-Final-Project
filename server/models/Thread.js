@@ -20,11 +20,6 @@ const ThreadSchema = new mongoose.Schema({
         set: setName,
     },
     entries: [PostSchema],
-    forum: {
-        type: String,
-        required: true,
-        set: setName,
-    },
     createdDate: {
         type: Date,
         default: Date.now,
@@ -88,7 +83,6 @@ const createHome = async () => {
             await HomeModel.create({ entries: [subPage1, subPage2, subPage3, subPage4, subPage5] });
         }
 
-        console.log(await HomeModel.findOne());
     } catch (error) {
         console.error('Error in createHome:', error);
     }

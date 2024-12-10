@@ -5,6 +5,7 @@ module.exports = {
         login: './client/login.jsx',
         home: './client/home.jsx',
         subpage: '/client/subpage.jsx',
+        thread: './client/thread.jsx',
     },
     module: {
         rules: [
@@ -13,7 +14,7 @@ module.exports = {
                 exclude: /node_modules/,
                 use: {
                     loader: "babel-loader",
-                    
+
                 },
             },
         ],

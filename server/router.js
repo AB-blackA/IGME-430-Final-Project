@@ -26,17 +26,19 @@ const router = (app) => {
   // 'Minecraft' might be a subpage and contain threads related to Minecraft. You would want to 
   // GET the subpage (like `/subpage/Minecraft`), and possibly POST a new thread to the subpage 
   // (like `/subpage/Minecraft`).
-  app.get('/subPage/:subpageName', mid.requiresSecure, controllers.Thread.subPagePage);
-  app.post('/subPage/:subpageName', mid.requiresSecure, mid.requiresLogin, controllers.Thread.newThread);
+  app.get('/subPage/:subPageName', mid.requiresSecure, controllers.Thread.subPagePage);
+
+  // this should be like above, but for a specific thread
+  app.get('/subPage/:subPageName/:threadName', mid.requiresSecure, controllers.Thread.postsPage);
+
+  //make a thread
+  app.post('/newThread', mid.requiresSecure, mid.requiresLogin, controllers.Thread.newThread);
 
   // get data about subpage
   app.get('/subPageData', mid.requiresSecure, controllers.Thread.subPageData);
 
-  // posts is what loads in the specific thread. For example, in a Minecraft subthread, you might
-  // want to GET the posts from a thread titled 'Best Way to Mine Diamonds?' as well as POST
-  // a 'post' (reply, comment, etc.) to that thread.
-  app.get('/subPage/:subPageName/posts/:threadName', mid.requiresSecure, controllers.Thread.postsPage);
-  app.post('/subPage/:subPageName/posts/:threadName', mid.requiresSecure, mid.requiresLogout, controllers.Thread.postToThread);
+  app.get('/threadData', mid.requiresSecure, controllers.Thread.threadData);
+  app.post('/newPost', mid.requiresSecure, mid.requiresLogin, controllers.Thread.newPost);
 
   // profile is the profile page for any given user. GET allows you to see their profile page, which 
   // would likely contain a BIO and Avatar. POST is a way to update your profile page for a new bio
