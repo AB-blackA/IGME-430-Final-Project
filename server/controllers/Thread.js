@@ -20,7 +20,7 @@ const postsPage = (req, res) => {
     return res.render(`thread`, { subPageName, threadName });
 };
 
-// new endpoint to fetch thread data (including posts) for a given thread in a subpage
+// fetch thread data (including posts) for a given thread in a subpage
 const threadData = async (req, res) => {
     try {
         const { threadName, subPageName } = req.query;
@@ -75,15 +75,16 @@ const getSubPageList = async (req, res) => {
     try {
         const home = await HomeModel.findOne();
         if (!home) {
-            return res.json({ home: [] });
+            return res.status(404).json({ home: [] });
         }
         const subPageNames = home.entries.map(subPage => subPage.name);
         return res.json({ subPageNames });
     } catch (err) {
         console.error('Error fetching subpages', err);
-        return res.json({ home: [] });
+        return res.status(500).json({ error: 'An error occurred while fetching subpages.' });
     }
 };
+
 
 // create a new subpage
 const newSubPage = async (req, res) => {

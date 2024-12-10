@@ -46,6 +46,12 @@ const router = (app) => {
   //app.post('/profile', mid.requiresSecure, mid.requiresLogin, controllers.Profile.updateBio);
 
   app.get('/', mid.requiresSecure, mid.requiresLogout, controllers.Thread.homePage);
+
+  // catch all
+  app.use((req, res) => {
+    res.status(404).render('404'); 
+  });
+  
 };
 
 module.exports = router;
