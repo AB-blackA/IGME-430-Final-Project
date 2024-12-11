@@ -1,3 +1,9 @@
+/* Author: Austin,
+ * Since: unknown
+ * models/Account.js deals with all the data models for a user account.
+ * I have no contributions to this. It's all from domomaker
+ */
+
 /* This file defines our schema and model interface for the account data.
 
    We first import bcrypt and mongoose into the file. bcrypt is an industry

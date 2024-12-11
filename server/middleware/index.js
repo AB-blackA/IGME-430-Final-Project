@@ -1,4 +1,8 @@
-// this is an Austin file pulled from Domo
+/* Author: Austin
+ * Since: unknown
+ * middleware/index.js defines middleware for some routes. It's untouched by me
+ * and is identical to domomakers
+ */
 
 const requiresLogin = (req, res, next) => {
   if (!req.session.account) {

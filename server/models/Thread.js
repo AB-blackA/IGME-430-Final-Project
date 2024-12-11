@@ -1,3 +1,10 @@
+/* Author: Andrew Black
+ * Since: 12/3/24
+ * models/Thread.js deals with all the data models for threads. Namely,
+ * subpage model, thread model, and postmodel for subpages, threads, and the posts respectively.
+ * there's also a Home model, which contains all of it - but seems unnecessary in retrospect
+ */
+
 const mongoose = require('mongoose');
 const _ = require('underscore');
 
@@ -7,8 +14,12 @@ const setName = (name) => _.escape(name).trim();
 // entry is the post
 // user displays the user and avatar
 const PostSchema = new mongoose.Schema({
-  entry: String,
-  user: String,
+  entries: {
+    type: String,
+    required: true,
+    trime: true,
+    set: setName,
+  },
 });
 
 // forum is the name of the subpage a thread belongs to
@@ -62,12 +73,16 @@ ThreadSchema.statics.toAPI = (doc) => ({
 let SubPageModel = {};
 let ThreadModel = {};
 let HomeModel = {};
+let PostModel = {};
 
 SubPageModel = mongoose.model('SubPage', SubPageSchema);
 ThreadModel = mongoose.model('Thread', ThreadSchema);
+PostModel = mongoose.model('Post', PostSchema);
 
 HomeModel = mongoose.models.Home || mongoose.model('Home', HomeSchema);
 
+// this was made to start something on the page before I added in form functionality to
+// do it on the site.
 const createHome = async () => {
   try {
     const home = await HomeModel.findOne();
@@ -94,4 +109,5 @@ module.exports = {
   ThreadModel,
   HomeModel,
   SubPageModel,
+  PostModel,
 };

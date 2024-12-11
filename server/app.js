@@ -1,3 +1,9 @@
+/* Author: Austin
+ * Since: unknown
+ * app.js is the route of react ( i think ). This is all pulled from DomoMaker and works
+ * perfectly here as well
+ */
+
 require('dotenv').config();
 
 const path = require('path');
@@ -52,14 +58,12 @@ redisClient.connect().then(() => {
   app.set('view engine', 'handlebars');
   app.set('views', `${__dirname}/../views`);
 
-  // Middleware to add `isLoggedIn` to all routes
+  // middleware to add isLoggedIn for handlebars that care about it
   app.use((req, res, next) => {
-    // Check if the user is logged in via session
     res.locals.isLoggedIn = req.session.isLoggedIn || false;
     next();
   });
 
-  // Define your routes here
   router(app);
 
   app.listen(port, (err) => {

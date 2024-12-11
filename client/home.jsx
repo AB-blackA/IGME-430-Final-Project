@@ -1,8 +1,15 @@
+/* Author: Andrew Black
+ * Since: 12/3/24
+ * home.jsx is the script page that works for the home page. It gathers subpages and allows
+ * for the creation of them
+ */
+
 const helper = require('./helper.js');
 const React = require('react');
 const { createRoot } = require('react-dom/client');
 const { useState, useEffect } = React;
 
+// this is what displays the subpages
 const SubPageList = (props) => {
     const [subPageList, setPages] = useState(props.subpages);
 
@@ -41,7 +48,8 @@ const SubPageList = (props) => {
     );
 };
 
-const createSubPage = async (event, reloadSubPageList, setReloadSubPageList, setStatusMessage) => {
+// this is the form for creating one.
+const CreateSubPage = async (event, reloadSubPageList, setReloadSubPageList, setStatusMessage) => {
     event.preventDefault();
     const form = event.target;
     const subPageName = form.subPageName.value.trim();
@@ -77,7 +85,7 @@ const App = () => {
                 <SubPageList subpages={[]} reloadSubPageList={reloadSubPageList} />
             </div>
             <div id='makeSub'>
-                <form onSubmit={(e) => createSubPage(e, reloadSubPageList, setReloadSubPageList, setStatusMessage)}>
+                <form onSubmit={(e) => CreateSubPage(e, reloadSubPageList, setReloadSubPageList, setStatusMessage)}>
                     <label htmlFor='subPageName'>Subpage Name:</label>
                     <input type='text' id='subPageName' name='subPageName' placeholder='Enter subpage name' required />
                     <button type='submit'>Create Subpage</button>

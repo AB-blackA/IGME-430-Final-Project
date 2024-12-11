@@ -1,11 +1,19 @@
+/* Author: Andrew Black
+ * Since: 12/3/24
+ * thread.jsx is the script page that works for the thread page. It gathers the posts and allows
+ * for the creation of them. However, it doesn't seem to work as
+ */
+
 const React = require('react');
 const { createRoot } = require('react-dom/client');
 const { useState, useEffect } = React;
 
+// gather params for routing
 const urlParts = window.location.pathname.split('/');
 const threadName = urlParts[urlParts.length - 1];
 const subPageName = urlParts[urlParts.length - 2];
 
+// get posts (doesn't work)
 const PostList = (props) => {
     const [postList, setPosts] = useState(props.posts);
 
@@ -13,10 +21,13 @@ const PostList = (props) => {
         const getPostsFromServer = async () => {
             const response = await fetch(`/threadData?threadName=${threadName}&subPageName=${subPageName}`);
             const data = await response.json();
-            setPosts(data.thread.entries);
+            console.log(data);
+            setPosts(data.thread.entries.map((entry) => entry.entries));
         };
         getPostsFromServer();
     }, [props.reloadPostList]);
+
+    console.log(`postList: ${postList}`);
 
     if (postList.length === 0) {
         return (
@@ -27,18 +38,20 @@ const PostList = (props) => {
     }
 
     const postNodes = postList.map((post) => (
-        <div key={post.name} className='posts'>
-            <h3 className='postName'>{post.name}</h3>
+        <div key={post.id} className='posts'>
+            <h3 className='postName'>{post.id}</h3>
             <p>{post.content}</p>
         </div>
     ));
+    
 
     return (
         <div className='postList'>{postNodes}</div>
     );
 };
 
-const createPost = async (event, threadName, reloadPostList, setReloadPostList, setStatusMessage) => {
+// make posts (works, but you wouldn't know if you're the user)
+const CreatePost = async (event, threadName, reloadPostList, setReloadPostList, setStatusMessage) => {
     event.preventDefault();
     const form = event.target;
     const postContent = form.postContent.value.trim();
@@ -60,6 +73,7 @@ const createPost = async (event, threadName, reloadPostList, setReloadPostList, 
         }),
     });
 
+
     if (response.ok) {
         setStatusMessage('Post created successfully!');
         setReloadPostList(!reloadPostList);
@@ -78,7 +92,7 @@ const ThreadPage = () => {
                 <PostList posts={[]} reloadPostList={reloadPostList} triggerReload={() => setReloadPostList(!reloadPostList)} />
             </div>
             <div id='create-post'>
-                <form onSubmit={(e) => createPost(e, threadName, reloadPostList, setReloadPostList, setStatusMessage)}>
+                <form onSubmit={(e) => CreatePost(e, threadName, reloadPostList, setReloadPostList, setStatusMessage)}>
                     <label htmlFor='postContent'>Post Content:</label>
                     <textarea id='postContent' name='postContent' placeholder='Enter post content' required />
                     <button type='submit'>Create Post</button>

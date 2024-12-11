@@ -1,5 +1,7 @@
-// this page is taken from DOMO maker and requires some workshopping.
-// as of 12/4/24, it has yet to be touched by me
+/* Author: Austin, semi-touched by Andrew
+ * Purpose: helper.js is supposed to assist in functionality for jsx pages.
+ * However, the only one I use is handleError, which does nothing but print logs
+*/
 
 /* Takes in an error message. Sets the error message up in html, and
    displays it to the user. Will be hidden by other events that could
@@ -32,8 +34,6 @@ const sendPost = async (url, data) => {
   }
 };
 
-const getSubPages = async () => {
-  const response = await fetch('/getSubPages');
-  const data = await response.json();
-  return data.subpages;
+module.export = {
+  sendPost,
 };

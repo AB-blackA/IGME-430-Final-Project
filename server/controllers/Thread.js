@@ -1,6 +1,14 @@
+/* Author: Andrew Black
+ * Since: 12/3/24
+ * controllers/Thread.js is the controller for anything related to the main functionality
+ * of the site. This means gathering subpages, threads, and posts and allowing edits
+ */
+
 const models = require('../models');
 
-const { ThreadModel, HomeModel, SubPageModel } = models.Thread;
+const {
+  ThreadModel, HomeModel, SubPageModel, PostModel,
+} = models.Thread;
 
 // render the home page
 const homePage = (req, res) => res.render('main');
@@ -41,7 +49,7 @@ const threadData = async (req, res) => {
     }
 
     // return the thread and its posts
-    return res.json({ thread });
+    return res.status(200).json({ thread });
   } catch (err) {
     console.error('Error fetching thread data', err);
     return res.status(500).json({ error: 'An error occurred while fetching thread data.' });
@@ -121,6 +129,8 @@ const newSubPage = async (req, res) => {
 const newThread = async (req, res) => {
   const { subpageName, threadName } = req.body;
 
+  console.log(`newThread ${subpageName}`);
+
   if (!subpageName || !threadName) {
     return res.status(400).json({ error: 'Subpage name and thread name are required.' });
   }
@@ -132,6 +142,8 @@ const newThread = async (req, res) => {
     }
 
     const newThreadData = new ThreadModel({ name: threadName, entries: [] });
+    await newThreadData.save();
+
     subPage.entries.push(newThreadData);
     await subPage.save();
 
@@ -144,7 +156,7 @@ const newThread = async (req, res) => {
 
 // create a new post in a thread
 const newPost = async (req, res) => {
-  const { postContent, threadName } = req.body;
+  const { threadName, postContent } = req.body;
 
   if (!threadName || !postContent) {
     return res.status(400).json({ error: 'Thread name and post content are required.' });
@@ -156,8 +168,13 @@ const newPost = async (req, res) => {
       return res.status(404).json({ error: 'Thread not found.' });
     }
 
-    thread.entries.push({ content: postContent });
+    const newPostData = new PostModel({ entries: postContent });
+    await newPostData.save();
+
+    thread.entries.push(newPostData);
     await thread.save();
+
+    console.log(`thread entries: ${thread.entries}`);
 
     return res.status(201).json({ message: 'Post created successfully.', post: postContent });
   } catch (error) {
